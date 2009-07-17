@@ -1,23 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace NUpgrade
 {
     public class NUpgrader<VersionT, UpgradeScopeT> where VersionT : IComparable<VersionT>
     {
-        public NUpgrader()
-        {
-        }
+        /// <summary>
+        /// Place to store all upgrade paths. In first dictionary - all "from" values, in second disctionary - all "to" values and their methods
+        /// </summary>
+        protected 
+        Dictionary<VersionT, 
+            Dictionary<VersionT, 
+                Action<UpgradeScopeT>
+            >
+        > paths = new Dictionary<VersionT, Dictionary<VersionT, Action<UpgradeScopeT>>>();
 
-        private Dictionary<VersionT, Dictionary<VersionT, Action<UpgradePathMethodInfo<VersionT>>>> paths = new Dictionary<VersionT, Dictionary<VersionT, Action<UpgradePathMethodInfo<VersionT>>>>();
-
-        public NUpgrader<VersionT, UpgradeScopeT> Add(VersionT from, VersionT to, Action<UpgradePathMethodInfo<VersionT>> upgradeAction)
+        /// <summary>
+        /// Add upgrade method to upgrader
+        /// </summary>
+        /// <param name="from">From which version this method can upgrade</param>
+        /// <param name="to">To which version this method can upgrade</param>
+        /// <param name="upgradeAction">Action to run when upgrading</param>
+        /// <returns></returns>
+        public NUpgrader<VersionT, UpgradeScopeT> Add(VersionT from, VersionT to, Action<UpgradeScopeT> upgradeAction)
         {
-            Dictionary<VersionT, Action<UpgradePathMethodInfo<VersionT>>> fromMap;
+            Dictionary<VersionT, Action<UpgradeScopeT>> fromMap;
             if (!paths.TryGetValue(from, out fromMap))
             {
-                fromMap = new Dictionary<VersionT, Action<UpgradePathMethodInfo<VersionT>>>();
+                fromMap = new Dictionary<VersionT, Action<UpgradeScopeT>>();
                 paths[from] = fromMap;
             }
             fromMap[to] = upgradeAction;
@@ -25,29 +36,55 @@ namespace NUpgrade
             return this;
         }
 
-        private List<Action<UpgradeMessage>> messageListeners = new List<Action<UpgradeMessage>>();
+        /// <summary>
+        /// List of delegates which are lsitening to messages
+        /// </summary>
+        protected List<Action<UpgradeMessage>> messageListeners = new List<Action<UpgradeMessage>>();
 
-        public NUpgrader<VersionT, UpgradeScopeT> Listen(Action<UpgradeMessage> messageListener)
+        /// <summary>
+        /// Add message listener
+        /// </summary>
+        /// <param name="messageListener"></param>
+        /// <returns></returns>
+        public virtual NUpgrader<VersionT, UpgradeScopeT> Listen(Action<UpgradeMessage> messageListener)
         {
             messageListeners.Add(messageListener);
 
             return this;
         }
 
-        public IEnumerable<UpgradePathMethodInfo<VersionT>> FindUpgradePath(VersionT fromVersion, VersionT toVersion)
+        /// <summary>
+        /// Post message to message listeners
+        /// </summary>
+        /// <param name="message"></param>
+        public virtual void PostMessage(UpgradeMessage message)
         {
-            // delegate, version from, version to
-            var methods = new LinkedList<UpgradePathMethodInfo<VersionT>>();
-            // visu pirma randam kelia kaip atnaujinti
+            messageListeners.ForEach(a => { a(message); });
+        }
+
+        /// <summary>
+        /// Calculate upgrade steps needed to upgrade over specified versions
+        /// </summary>
+        /// <param name="fromVersion">From which version to upgrade</param>
+        /// <param name="toVersion">Target version</param>
+        /// <returns>List of upgrade steps, containing information about versions and method to execute</returns>
+        public virtual IEnumerable<UpgradeStep<VersionT, UpgradeScopeT>> FindUpgradeSteps(VersionT fromVersion, VersionT toVersion)
+        {
+            // upgrade step contains method info (version - from, to), and method to use to launch this step
+            var methods = new LinkedList<UpgradeStep<VersionT, UpgradeScopeT>>();
+            // first find "from" version
             VersionT currentVersion = fromVersion;
             while (currentVersion.CompareTo(toVersion) < 0)
             {
-                if (paths.ContainsKey(currentVersion))
+                // variants available from this version
+                Dictionary<VersionT, Action<UpgradeScopeT>> variants;
+                if (paths.TryGetValue(currentVersion, out variants))
                 {
-                    var variants = paths[currentVersion];
                     if (variants.ContainsKey(toVersion)) // we can upgrade directly
                     {
-                        methods.AddLast(new UpgradePathMethodInfo<VersionT>(variants[toVersion], currentVersion, toVersion));
+                        methods.AddLast(new UpgradeStep<VersionT, UpgradeScopeT>(
+                            new UpgradePathMethodInfo<VersionT, UpgradeScopeT>(this, currentVersion, toVersion),
+                            variants[toVersion]));
                         break;
                     }
                     else
@@ -55,7 +92,7 @@ namespace NUpgrade
                         // take latest possible upgrade from list
                         VersionT lastVersion = default(VersionT);
                         bool versionFound = false;
-                        Action<IUpgradeScope<VersionT>> lastDelegate = null;
+                        Action<UpgradeScopeT> lastDelegate = null;
 
                         bool first = true;
                         foreach (var kv in variants)
@@ -79,7 +116,9 @@ namespace NUpgrade
                         {
                             if (versionFound)
                             {
-                                methods.AddLast(new UpgradePathMethodInfo<VersionT>(lastDelegate, currentVersion, lastVersion));
+                                methods.AddLast(new UpgradeStep<VersionT, UpgradeScopeT>(
+                                    new UpgradePathMethodInfo<VersionT, UpgradeScopeT>(this, currentVersion, toVersion),
+                                    lastDelegate));
                                 currentVersion = lastVersion;
                             }
                             else
@@ -97,40 +136,66 @@ namespace NUpgrade
             return methods;
         }
 
-        public bool Execute(IEnumerable<UpgradePathMethodInfo<VersionT>> upgradeMethods, Func<UpgradePathMethodInfo<VersionT>, bool> upgradeLoadFunction)
+        /// <summary>
+        /// Execute upgrade steps with default step loading method
+        /// </summary>
+        /// <param name="upgradeSteps">Upgrade steps to execute</param>
+        /// <returns>True is executed successfully, false if not.</returns>
+        public virtual bool Execute(IEnumerable<UpgradeStep<VersionT, UpgradeScopeT>> upgradeSteps)
         {
-            if (upgradeMethods == null)
+            return Execute(upgradeSteps, step =>
+                {
+                    try
+                    {
+                        step.MethodDelegate(default(UpgradeScopeT));
+                        PostMessage(new UpgradeMessage("Success!", UpgradeMessageType.Info));
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        PostMessage(new UpgradeMessage("Error when upgrading from version " + step.MethodInfo.From + " to " + step.MethodInfo.To + ": " + e.ToString(), UpgradeMessageType.Error));
+                        return false;
+                    }
+                });
+        }
+
+        /// <summary>
+        /// Execute upgrade steps with custom step loading method
+        /// </summary>
+        /// <param name="upgradeSteps">Upgrade steps to execute</param>
+        /// <param name="stepLoadFunction">Function which starts upgrade delegate with specified UpgradeScopeT type.</param>
+        /// <returns>True is executed successfully, false if not.</returns>
+        public virtual bool Execute(IEnumerable<UpgradeStep<VersionT, UpgradeScopeT>> upgradeSteps, Func<UpgradeStep<VersionT, UpgradeScopeT>, bool> stepLoadFunction)
+        {
+            if (upgradeSteps == null)
                 return false;
 
-            var methods = upgradeMethods.ToArray();
+            var steps = upgradeSteps.ToArray();
 
-            if (methods.Length > 0)
+            if (steps.Length > 0)
             {
+                // print upgrade path message
+
                 string upgradePathStr = "";
-                foreach (var method in methods)
+                foreach (var step in steps)
                 {
                     if (upgradePathStr == "")
                     {
-                        upgradePathStr = method.From + " -> " + method.To;
+                        upgradePathStr = step.MethodInfo.From + " -> " + step.MethodInfo.To;
                     }
                     else
                     {
-                        upgradePathStr += " -> " + method.To;
+                        upgradePathStr += " -> " + step.MethodInfo.To;
                     }
                 }
 
-                upgradeScope.PostMessage(new UpgradeMessage("Will use this upgrade path: " + upgradePathStr, UpgradeMessageType.Info));
+                PostMessage(new UpgradeMessage("Will use this upgrade path: " + upgradePathStr, UpgradeMessageType.Info));
 
-                for (var i = 0; i < methods.Length; i++)
+                for (var i = 0; i < steps.Length; i++)
                 {
-                    var method = methods[i];
-                    method.Scope = upgradeScope;
+                    var step = steps[i];
 
-                    upgradeScope.PushVersionScope(new VersionScope<VersionT>(method.From, method.To));
-
-                    bool success = upgradeLoadFunction(method);
-
-                    upgradeScope.PopVersionScope();
+                    bool success = stepLoadFunction(step);
 
                     if (!success)
                         return false;
