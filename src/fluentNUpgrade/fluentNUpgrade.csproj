@@ -54,6 +54,7 @@
     <Compile Include="UpgradeGen\EntityUpgradeActions.cs" />
     <Compile Include="UpgradeGen\Exceptions\ColumnAlreadyAddedException.cs" />
     <Compile Include="UpgradeGen\Exceptions\ColumnAlreadyRemovedException.cs" />
+    <Compile Include="UpgradeGen\Exceptions\ColumnNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\fluent-nhibernate\src\FluentNHibernate\FluentNHibernate.csproj">
