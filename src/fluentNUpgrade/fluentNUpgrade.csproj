@@ -43,7 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityUpgrade.cs" />
     <Compile Include="FluentNUpgrader.cs" />
+    <Compile Include="Mapping\IUpgradedFrom.cs" />
+    <Compile Include="Mapping\UpgradeMap.cs" />
     <Compile Include="NUpgradeScope.cs" />
     <Compile Include="PersistenceModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
