@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrentVersion.cs" />
     <Compile Include="EntityUpgrade.cs" />
     <Compile Include="FluentNUpgrader.cs" />
     <Compile Include="Mapping\IUpgradedFrom.cs" />

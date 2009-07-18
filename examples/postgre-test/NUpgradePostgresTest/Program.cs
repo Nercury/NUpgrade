@@ -8,35 +8,26 @@ using NHibernate.Tool.hbm2ddl;
 using Npgsql;
 using NUpgrade;
 using FluentNUpgrade.Mapping;
+using FluentNHibernate.Conventions.Inspections;
+using FluentNHibernate.Conventions;
+using FluentNHibernate.AutoMap;
 
 namespace NUpgradeTest
 {
-    public class Employee
+    [CurrentVersion]
+    public class Employee : IUpgradedFrom<Employee_0>
     {
         public virtual int Id { get; private set; }
         public virtual string FirstName { get; set; }
         public virtual string MiddleName { get; set; }
         public virtual string LastName { get; set; }
-    }
 
-    public class EmployeeMap : ClassMap<Employee>, IUpgradedFrom<EmployeeMap_0>
-    {
-        public EmployeeMap()
-        {
-            WithTable("blink_employee_1");
-            Id(x => x.Id);
-            Map(x => x.FirstName);
-            Map(x => x.MiddleName);
-            Map(x => x.LastName);
-        }
+        #region IUpgradedFrom<Employee_0> Members
 
-        #region IUpgradedFrom<EmployeeMap_0> Members
-
-        public void InitUpgradeMap(UpgradeMap upgrade)
+        public virtual void InitUpgradeMap(UpgradeMap upgrade)
         {
             upgrade
-                .AddColumn("MiddleName", typeof(string))
-                .TableRename("blink_employee_0", "blink_employee_1");
+                .AddColumn("MiddleName", typeof(string));
         }
 
         #endregion
@@ -47,18 +38,6 @@ namespace NUpgradeTest
         public virtual int Id { get; private set; }
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
-    }
-
-    [SkipMapping]
-    public class EmployeeMap_0 : ClassMap<Employee_0>
-    {
-        public EmployeeMap_0()
-        {
-            WithTable("blink_employee_0");
-            Id(x => x.Id);
-            Map(x => x.FirstName);
-            Map(x => x.LastName);
-        }
     }
 
     class Program
@@ -79,7 +58,7 @@ namespace NUpgradeTest
                     scope.PostMessage(new UpgradeMessage("Startting Emplyee upgrade...", UpgradeMessageType.Info));
 
                     new EntityUpgrade()
-                        .Add<EmployeeMap_0, EmployeeMap>()
+                        .Add<Employee_0, Employee>()
                         .OutputScripts()
                         .Execute();
 
@@ -105,7 +84,17 @@ namespace NUpgradeTest
                 )
                 .Mappings(m =>
                 {
-                    m.FluentMappings.AddFromAssemblyOf<Program>();
+                    m.AutoMappings.Add(() =>
+                        {
+                            var model = AutoPersistenceModel  
+                                .MapEntitiesFromAssemblyOf<Employee>()
+                                .Where(type =>
+                                    {
+                                        return type.GetCustomAttributes(typeof(CurrentVersionAttribute), false).Length > 0;
+                                    });
+
+                            return model;
+                        });
                 })
                 .ExposeConfiguration(config =>
                 {
