@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A96F3B43-5CFC-4ED0-BEE3-2213C381771B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{DFB02D89-7659-4A40-B62D-DEDFB57470A8}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUpgradeTest</RootNamespace>
-    <AssemblyName>NUpgradeTest</AssemblyName>
+    <RootNamespace>NUpgrade</RootNamespace>
+    <AssemblyName>NUpgrade</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,18 +35,15 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="IUpgradeScope.cs" />
+    <Compile Include="BasicUpgrader.cs" />
+    <Compile Include="UpgradeMessage.cs" />
+    <Compile Include="UpgradeMessageType.cs" />
+    <Compile Include="UpgradePathMethodInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NUpgrade\NUpgrade.csproj">
-      <Project>{DFB02D89-7659-4A40-B62D-DEDFB57470A8}</Project>
-      <Name>NUpgrade</Name>
-    </ProjectReference>
+    <Compile Include="UpgradeStep.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

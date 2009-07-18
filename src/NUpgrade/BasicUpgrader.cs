@@ -4,7 +4,12 @@ using System.Linq;
 
 namespace NUpgrade
 {
-    public class NUpgrader<VersionT, UpgradeScopeT> where VersionT : IComparable<VersionT>
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="VersionT"></typeparam>
+    /// <typeparam name="UpgradeScopeT"></typeparam>
+    public class BasicUpgrader<VersionT, UpgradeScopeT> where VersionT : IComparable<VersionT>
     {
         /// <summary>
         /// Place to store all upgrade paths. In first dictionary - all "from" values, in second disctionary - all "to" values and their methods
@@ -23,7 +28,7 @@ namespace NUpgrade
         /// <param name="to">To which version this method can upgrade</param>
         /// <param name="upgradeAction">Action to run when upgrading</param>
         /// <returns></returns>
-        public NUpgrader<VersionT, UpgradeScopeT> Add(VersionT from, VersionT to, Action<UpgradeScopeT> upgradeAction)
+        public BasicUpgrader<VersionT, UpgradeScopeT> Add(VersionT from, VersionT to, Action<UpgradeScopeT> upgradeAction)
         {
             Dictionary<VersionT, Action<UpgradeScopeT>> fromMap;
             if (!paths.TryGetValue(from, out fromMap))
@@ -46,7 +51,7 @@ namespace NUpgrade
         /// </summary>
         /// <param name="messageListener"></param>
         /// <returns></returns>
-        public virtual NUpgrader<VersionT, UpgradeScopeT> Listen(Action<UpgradeMessage> messageListener)
+        public virtual BasicUpgrader<VersionT, UpgradeScopeT> Listen(Action<UpgradeMessage> messageListener)
         {
             messageListeners.Add(messageListener);
 
@@ -117,7 +122,7 @@ namespace NUpgrade
                             if (versionFound)
                             {
                                 methods.AddLast(new UpgradeStep<VersionT, UpgradeScopeT>(
-                                    new UpgradePathMethodInfo<VersionT, UpgradeScopeT>(this, currentVersion, toVersion),
+                                    new UpgradePathMethodInfo<VersionT, UpgradeScopeT>(this, currentVersion, lastVersion),
                                     lastDelegate));
                                 currentVersion = lastVersion;
                             }
@@ -147,6 +152,7 @@ namespace NUpgrade
                 {
                     try
                     {
+                        PostMessage(new UpgradeMessage("Upgrading from " + step.MethodInfo.From + " to " + step.MethodInfo.To + "...", UpgradeMessageType.Info));
                         step.MethodDelegate(default(UpgradeScopeT));
                         PostMessage(new UpgradeMessage("Success!", UpgradeMessageType.Info));
                         return true;

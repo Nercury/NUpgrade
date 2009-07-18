@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fluentNUpgrade", "fluentNUpgrade\fluentNUpgrade.csproj", "{81D41169-3F29-4EBF-BA48-3E11508D479A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentNUpgrade", "fluentNUpgrade\FluentNUpgrade.csproj", "{81D41169-3F29-4EBF-BA48-3E11508D479A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade", "..\NUpgrade\NUpgrade.csproj", "{DFB02D89-7659-4A40-B62D-DEDFB57470A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentNHibernate", "..\..\fluent-nhibernate\src\FluentNHibernate\FluentNHibernate.csproj", "{529145D5-6CC3-4016-89B5-826563024AF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgradeTest", "..\NUpgradeTest\NUpgradeTest.csproj", "{A96F3B43-5CFC-4ED0-BEE3-2213C381771B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade", "NUpgrade\NUpgrade.csproj", "{DFB02D89-7659-4A40-B62D-DEDFB57470A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgradeTest", "NUpgradeTest\NUpgradeTest.csproj", "{A96F3B43-5CFC-4ED0-BEE3-2213C381771B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{81D41169-3F29-4EBF-BA48-3E11508D479A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D41169-3F29-4EBF-BA48-3E11508D479A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81D41169-3F29-4EBF-BA48-3E11508D479A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{529145D5-6CC3-4016-89B5-826563024AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{529145D5-6CC3-4016-89B5-826563024AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{529145D5-6CC3-4016-89B5-826563024AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{529145D5-6CC3-4016-89B5-826563024AF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Release|Any CPU.ActiveCfg = Release|Any CPU

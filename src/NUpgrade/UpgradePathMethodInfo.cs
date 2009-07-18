@@ -12,9 +12,9 @@ namespace NUpgrade
         public VersionT From { get; private set; }
         public VersionT To { get; private set; }
 
-        private NUpgrader<VersionT, UpgradeScopeT> upgrader;
+        private BasicUpgrader<VersionT, UpgradeScopeT> upgrader;
 
-        public UpgradePathMethodInfo(NUpgrader<VersionT, UpgradeScopeT> upgrader, VersionT versionFrom, VersionT versionTo)
+        public UpgradePathMethodInfo(BasicUpgrader<VersionT, UpgradeScopeT> upgrader, VersionT versionFrom, VersionT versionTo)
         {
             this.upgrader = upgrader;
             this.From = versionFrom;
