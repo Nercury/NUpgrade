@@ -7,7 +7,6 @@ using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Npgsql;
 using NUpgrade;
-using FluentNUpgrade.Mapping;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.AutoMap;
@@ -15,22 +14,12 @@ using FluentNHibernate.AutoMap;
 namespace NUpgradeTest
 {
     [CurrentVersion]
-    public class Employee : IUpgradedFrom<Employee_0>
+    public class Employee
     {
         public virtual int Id { get; private set; }
         public virtual string FirstName { get; set; }
         public virtual string MiddleName { get; set; }
         public virtual string LastName { get; set; }
-
-        #region IUpgradedFrom<Employee_0> Members
-
-        public virtual void InitUpgradeMap(UpgradeMap upgrade)
-        {
-            upgrade
-                .AddColumn("MiddleName", typeof(string));
-        }
-
-        #endregion
     }
 
     public class Employee_0
@@ -57,8 +46,9 @@ namespace NUpgradeTest
                 {
                     scope.PostMessage(new UpgradeMessage("Startting Emplyee upgrade...", UpgradeMessageType.Info));
 
-                    new EntityUpgrade()
-                        .Add<Employee_0, Employee>()
+                    new SchemaUpgrade()
+                        .ForEntity("Employee", e => e
+                            .AddColumn<string>("MiddleName"))
                         .OutputScripts()
                         .Execute();
 
