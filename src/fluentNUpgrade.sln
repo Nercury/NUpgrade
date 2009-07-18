@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentNHibernate", "..\..\f
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade", "NUpgrade\NUpgrade.csproj", "{DFB02D89-7659-4A40-B62D-DEDFB57470A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgradeTest", "NUpgradeTest\NUpgradeTest.csproj", "{A96F3B43-5CFC-4ED0-BEE3-2213C381771B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgradePostgresExample", "..\examples\postgre-test\NUpgradePostgresTest\NUpgradePostgresExample.csproj", "{A96F3B43-5CFC-4ED0-BEE3-2213C381771B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

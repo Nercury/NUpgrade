@@ -55,15 +55,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\fluent-nhibernate\src\FluentNHibernate\FluentNHibernate.csproj">
+    <ProjectReference Include="..\..\..\..\fluent-nhibernate\src\FluentNHibernate\FluentNHibernate.csproj">
       <Project>{529145D5-6CC3-4016-89B5-826563024AF1}</Project>
       <Name>FluentNHibernate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\fluentNUpgrade\FluentNUpgrade.csproj">
+    <ProjectReference Include="..\..\..\src\fluentNUpgrade\FluentNUpgrade.csproj">
       <Project>{81D41169-3F29-4EBF-BA48-3E11508D479A}</Project>
       <Name>FluentNUpgrade</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NUpgrade\NUpgrade.csproj">
+    <ProjectReference Include="..\..\..\src\NUpgrade\NUpgrade.csproj">
       <Project>{DFB02D89-7659-4A40-B62D-DEDFB57470A8}</Project>
       <Name>NUpgrade</Name>
     </ProjectReference>
