@@ -46,7 +46,7 @@ namespace NUpgradeTest
                 {
                     scope.PostMessage(new UpgradeMessage("Startting Emplyee upgrade...", UpgradeMessageType.Info));
 
-                    new SchemaUpgrade()
+                    new SchemaUpgrade(scope.Session.SessionFactory.Dialect)
                         .ForEntity("Employee", e => e
                             .AddColumn<string>("MiddleName"))
                         .OutputScripts()
