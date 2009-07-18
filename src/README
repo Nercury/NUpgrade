@@ -1,0 +1,3 @@
+NUpgrade is generic upgrader with no references to NHibernate - done.
+
+FluentNUpgrade is same upgrader extended for FluentNHibernate.
