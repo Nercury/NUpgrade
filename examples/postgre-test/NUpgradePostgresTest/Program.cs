@@ -10,6 +10,7 @@ using NUpgrade;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.AutoMap;
+using NHibernate.Dialect;
 
 namespace NUpgradeTest
 {
@@ -46,9 +47,16 @@ namespace NUpgradeTest
                 {
                     scope.PostMessage(new UpgradeMessage("Startting Emplyee upgrade...", UpgradeMessageType.Info));
 
-                    new SchemaUpgrade(scope.Session.SessionFactory.Dialect)
-                        .ForEntity("Employee", e => e
-                            .AddColumn<string>("MiddleName"))
+                    new SchemaUpgrade(Dialect.GetDialect())
+                        .ForEntity("Employee", e => 
+                        {
+                            e.AddColumn<string>("MiddleName");
+                            e.ModifyColumn("FirstName", c => 
+                            {
+                                c.AddIndex("ix_name");
+                                c.RemoveIndex("ix_name");
+                            });
+                        })
                         .OutputScripts()
                         .Execute();
 
