@@ -5,7 +5,7 @@ using System.Linq;
 namespace NUpgrade
 {
     /// <summary>
-    /// 
+    /// Generic database upgrader
     /// </summary>
     /// <typeparam name="VersionT"></typeparam>
     /// <typeparam name="UpgradeScopeT"></typeparam>
