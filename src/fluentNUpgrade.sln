@@ -1,18 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade", "NUpgrade\NUpgrade.csproj", "{DFB02D89-7659-4A40-B62D-DEDFB57470A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade", "NUpgrade\NUpgrade.csproj", "{F13B1F04-A660-444C-BB4D-38C73F63668D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUpgrade.Sqlite", "NUpgrade.Sqlite\NUpgrade.Sqlite.csproj", "{99FFBEDA-5567-4A7F-BD91-8993320CC468}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFB02D89-7659-4A40-B62D-DEDFB57470A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F13B1F04-A660-444C-BB4D-38C73F63668D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{99FFBEDA-5567-4A7F-BD91-8993320CC468}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
