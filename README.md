@@ -2,7 +2,7 @@ NUpgrade
 ========
 
 NUpgrade is a database upgrade helper. At the core is Migration class, which
-is used to initialize upgrade driver (so far only sql), check if database needs to be upgraded,
+is used to initialize upgrade driver (so far only SQLite), check if database needs to be upgraded,
 registering multiple upgrade paths, and executing actual upgrade.
 
 Actual example implementation:
@@ -41,3 +41,5 @@ NUpgrade.Sqlite
 ===============
 
 NUpgrade can be extended with additional drivers. So far only Sqlite is implemented.
+Internally, SQLite driver creates a "version" table and stores version number in it. It is done behind the scenes, so no
+special changes to database are required.
