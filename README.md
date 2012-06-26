@@ -5,7 +5,7 @@ NUpgrade is a database upgrade helper. At the core is Migration class, which
 is used to initialize upgrade driver (so far only SQLite), check if database needs to be upgraded,
 registering multiple upgrade paths, and executing actual upgrade.
 
-Actual example implementation:
+Example usage:
 
 	// create a new connection for local database, connection string should probably be stored elsewhere
 	var connection = new SQLiteConnection("Data Source=local.db;Version=3;New=True;Compress=True;");
