@@ -100,19 +100,19 @@ namespace NUpgrade.Sqlite
                         if (!hasVersionTable)
                         {
                             cmd.CommandText = @"CREATE TABLE [version] ([version] integer NOT NULL);";
-                            Debug.WriteLine(ToReadableString(cmd));
+                            if (LogAction != null) LogAction(ToReadableString(cmd));
                             cmd.ExecuteNonQuery();
 
                             cmd.CommandText = @"INSERT INTO [version] ([version]) VALUES (@value)";
                             cmd.Parameters.Add(new SQLiteParameter("@value", value));
-                            Debug.WriteLine(ToReadableString(cmd));
+                            if (LogAction != null) LogAction(ToReadableString(cmd));
                             cmd.ExecuteNonQuery();
                         }
                         else
                         {
                             cmd.CommandText = "UPDATE [version] SET [version] = @value";
                             cmd.Parameters.Add(new SQLiteParameter("@value", value));
-                            Debug.WriteLine(ToReadableString(cmd));
+                            if (LogAction != null) LogAction(ToReadableString(cmd));
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -138,7 +138,7 @@ namespace NUpgrade.Sqlite
                     cmd.Transaction = transaction;
                 }
                 cmd.CommandText = statement;
-                Debug.WriteLine(ToReadableString(cmd));
+                if (LogAction != null) LogAction(ToReadableString(cmd));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -206,6 +206,13 @@ namespace NUpgrade.Sqlite
                     "NULL" : param.Value.ToString()));
             }
             return builder.ToString();
+        }
+
+
+        public Action<string> LogAction
+        {
+            get;
+            set;
         }
     }
 }

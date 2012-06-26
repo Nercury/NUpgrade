@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace NUpgrade
 {
     /// <summary>
@@ -43,5 +44,10 @@ namespace NUpgrade
         /// Get driver name
         /// </summary>
         string DriverName { get; }
+
+        /// <summary>
+        /// Action which can receive messages for logging
+        /// </summary>
+        Action<string> LogAction { get; set; }
     }
 }

@@ -10,6 +10,11 @@ namespace NUpgrade
     public class Migration
     {
         /// <summary>
+        /// Action which can receive messages for logging
+        /// </summary>
+        public Action<string> LogAction { get; set; }
+
+        /// <summary>
         /// Currently required database version.
         /// </summary>
         private int requiredDbVersion;
@@ -32,6 +37,8 @@ namespace NUpgrade
         {
             this.requiredDbVersion = requiredDbVersion;
             this.schema = schema;
+
+            schema.LogAction = str => { if (LogAction != null) LogAction(str); };
         }
 
         /// <summary>
@@ -209,14 +216,14 @@ namespace NUpgrade
 
             if (hasAny)
             {
-                Debug.WriteLine("DB MIGRATION: Will use this upgrade path: " + upgradePathStr);
+                if (LogAction != null) LogAction("Will use this upgrade path: " + upgradePathStr);
 
                 foreach (var step in steps)
                 {
                     // execute each migration step in transaction
                     // in case exception occurs, always roll back transaction to leave user data consistent
 
-                    Debug.WriteLine("DB MIGRATION: Migrating from " + step.From + " to " + step.To);
+                    if (LogAction != null) LogAction("Migrating from " + step.From + " to " + step.To);
 
                     this.schema.BeginTransaction();
                     try
@@ -228,8 +235,8 @@ namespace NUpgrade
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine("DB MIGRATION ERROR: " + e.ToString());
-                        Debug.WriteLine(e.StackTrace.ToString());
+                        if (LogAction != null) LogAction("ERROR: " + e.ToString());
+                        if (LogAction != null) LogAction(e.StackTrace.ToString());
                         this.schema.RollbackTransaction();
                         throw e;
                     }
@@ -238,7 +245,7 @@ namespace NUpgrade
                     schema.Version = step.To;
                 }
 
-                Debug.WriteLine("DB MIGRATION: Done.");
+                if (LogAction != null) LogAction("Done.");
             }
 
             return true;
